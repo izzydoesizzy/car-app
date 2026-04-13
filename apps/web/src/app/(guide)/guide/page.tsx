@@ -62,6 +62,10 @@ const PROVINCES = [
   { code: "QC", name: "Quebec", highlight: "QST 9.975%, SAAQ" },
   { code: "MB", name: "Manitoba", highlight: "RST 7%, MPI" },
   { code: "SK", name: "Saskatchewan", highlight: "PST 6%, SGI" },
+  { code: "NS", name: "Nova Scotia", highlight: "HST 15%, MVI required" },
+  { code: "NB", name: "New Brunswick", highlight: "HST 15%, 10-day inspection deadline" },
+  { code: "PE", name: "Prince Edward Island", highlight: "HST 15%, limited inventory" },
+  { code: "NL", name: "Newfoundland and Labrador", highlight: "HST 15%, highest insurance rates" },
 ];
 
 export default function GuidePage() {
