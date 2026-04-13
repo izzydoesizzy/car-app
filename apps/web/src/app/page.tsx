@@ -18,10 +18,10 @@ export default function HomePage() {
           <Link href="/" className="text-xl font-bold text-primary">
             CarScout
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <Link
               href="/guide"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="hidden sm:inline text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Buying Guide
             </Link>
@@ -120,7 +120,7 @@ export default function HomePage() {
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6">
             Save listings from
           </h3>
-          <div className="flex flex-wrap justify-center gap-4 text-muted-foreground">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-muted-foreground">
             {[
               "AutoTrader.ca",
               "Kijiji Autos",

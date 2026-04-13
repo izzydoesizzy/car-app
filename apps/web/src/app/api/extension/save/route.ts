@@ -1,13 +1,36 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { ScrapedListing } from "@carscout/shared";
+
+/**
+ * Creates a Supabase client from a Bearer token (for Chrome extension auth).
+ */
+function createClientFromToken(accessToken: string) {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
+    }
+  );
+}
 
 /**
  * POST /api/extension/save
  * Receives a scraped listing from the Chrome extension and saves it.
+ * Supports both cookie-based auth (web app) and Bearer token auth (extension).
  */
 export async function POST(request: Request) {
-  const supabase = await createClient();
+  const authHeader = request.headers.get("authorization");
+  let supabase;
+  if (authHeader?.startsWith("Bearer ")) {
+    supabase = createClientFromToken(authHeader.slice(7));
+  } else {
+    supabase = await createClient();
+  }
 
   const {
     data: { user },

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarScout</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>CarScout</h1>
+    </header>
+
+    <!-- Sign-in view -->
+    <div id="view-signin" class="view" style="display: none;">
+      <p class="subtitle">Sign in to save listings</p>
+      <form id="signin-form">
+        <label for="api-url">CarScout URL</label>
+        <input type="url" id="api-url" placeholder="https://your-app.vercel.app" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+        <button type="submit" id="signin-btn">Sign In</button>
+        <p id="signin-error" class="error" style="display: none;"></p>
+      </form>
+    </div>
+
+    <!-- No listing detected -->
+    <div id="view-no-listing" class="view" style="display: none;">
+      <div class="status-badge connected">Connected</div>
+      <p class="info-text">Navigate to a car listing on a supported site:</p>
+      <ul class="site-list">
+        <li>AutoTrader.ca</li>
+        <li>Kijiji Autos</li>
+        <li>Facebook Marketplace</li>
+        <li>CarGurus</li>
+        <li>Clutch</li>
+        <li>Carpages</li>
+        <li>Auto123</li>
+      </ul>
+      <button id="signout-btn-idle" class="btn-secondary">Sign Out</button>
+    </div>
+
+    <!-- Listing detected -->
+    <div id="view-listing" class="view" style="display: none;">
+      <div class="status-badge connected">Connected</div>
+      <div id="listing-preview">
+        <img id="preview-image" src="" alt="" style="display: none;">
+        <div class="preview-details">
+          <span id="preview-marketplace" class="marketplace-badge"></span>
+          <h2 id="preview-title"></h2>
+          <div class="preview-meta">
+            <span id="preview-price" class="price"></span>
+            <span id="preview-mileage"></span>
+          </div>
+          <span id="preview-location"></span>
+        </div>
+      </div>
+      <button id="save-btn" class="btn-primary">Save to CarScout</button>
+      <p id="save-status" style="display: none;"></p>
+      <button id="signout-btn-listing" class="btn-secondary">Sign Out</button>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

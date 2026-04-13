@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "CarScout - Save Car Listings",
+  "version": "0.1.0",
+  "description": "Save and organize car listings from Canadian marketplaces. Clip listings from AutoTrader, Kijiji, Facebook Marketplace, and more.",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://www.autotrader.ca/*",
+    "https://www.facebook.com/*",
+    "https://www.kijijiautos.ca/*",
+    "https://www.clutch.ca/*",
+    "https://www.cargurus.ca/*",
+    "https://www.carpages.ca/*",
+    "https://www.auto123.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.autotrader.ca/a/*",
+        "https://www.facebook.com/marketplace/item/*",
+        "https://www.kijijiautos.ca/vdp/*",
+        "https://www.clutch.ca/vehicles/*",
+        "https://www.cargurus.ca/Cars/*",
+        "https://www.carpages.ca/used/*",
+        "https://www.auto123.com/en/used-cars/*"
+      ],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
