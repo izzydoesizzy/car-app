@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { ListingCard } from "@/components/listings/listing-card";
 import { DashboardFilters } from "@/components/listings/dashboard-filters";
-import { Plus, Chrome, Search } from "lucide-react";
+import { Plus, Car, Search } from "lucide-react";
 import Link from "next/link";
 import type { Listing } from "@carscout/shared";
 
@@ -24,8 +24,7 @@ export default async function DashboardPage({
   let query = supabase
     .from("listings")
     .select("*")
-    .eq("user_id", user!.id)
-    .order("created_at", { ascending: false });
+    .eq("user_id", user!.id);
 
   const status = params.status as string | undefined;
   if (status && status !== "all") {
@@ -54,10 +53,60 @@ export default async function DashboardPage({
     );
   }
 
-  // Sort
+  const bodyType = params.bodyType as string | undefined;
+  if (bodyType && bodyType !== "all") {
+    query = query.eq("body_type", bodyType);
+  }
+
+  const drivetrain = params.drivetrain as string | undefined;
+  if (drivetrain && drivetrain !== "all") {
+    query = query.eq("drivetrain", drivetrain);
+  }
+
+  const province = params.province as string | undefined;
+  if (province && province !== "all") {
+    query = query.eq("province", province);
+  }
+
+  const sellerType = params.sellerType as string | undefined;
+  if (sellerType && sellerType !== "all") {
+    query = query.eq("seller_type", sellerType);
+  }
+
+  const priceMin = params.priceMin as string | undefined;
+  if (priceMin) {
+    query = query.gte("listed_price_cad", Math.round(parseFloat(priceMin) * 100));
+  }
+
+  const priceMax = params.priceMax as string | undefined;
+  if (priceMax) {
+    query = query.lte("listed_price_cad", Math.round(parseFloat(priceMax) * 100));
+  }
+
+  const yearMin = params.yearMin as string | undefined;
+  if (yearMin) {
+    query = query.gte("year", parseInt(yearMin));
+  }
+
+  const yearMax = params.yearMax as string | undefined;
+  if (yearMax) {
+    query = query.lte("year", parseInt(yearMax));
+  }
+
+  const maxMileage = params.maxMileage as string | undefined;
+  if (maxMileage) {
+    query = query.lte("mileage_km", parseInt(maxMileage));
+  }
+
+  const winterTires = params.winterTires;
+  if (winterTires === "true") {
+    query = query.eq("has_winter_tires", true);
+  }
+
+  // Sort — ascending for price/year/mileage, descending for date (newest first)
   const sort = (params.sort as string) || "created_at";
-  const sortDir = sort === "listed_price_cad" || sort === "year" ? true : false;
-  query = query.order(sort, { ascending: sortDir });
+  const sortAscending = sort === "listed_price_cad" || sort === "year" || sort === "mileage_km";
+  query = query.order(sort, { ascending: sortAscending });
 
   const { data: listings, error } = await query;
 
@@ -75,7 +124,7 @@ export default async function DashboardPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-6">
         <div>
           <h1 className="text-2xl font-bold">Your Cars</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -94,9 +143,9 @@ export default async function DashboardPage({
       <DashboardFilters />
 
       {typedListings.length === 0 ? (
-        <EmptyState hasFilters={!!status || !!source || !!search} />
+        <EmptyState hasFilters={!!status || !!source || !!search || !!bodyType || !!drivetrain || !!province || !!sellerType || !!priceMin || !!priceMax || !!yearMin || !!yearMax || !!maxMileage || !!winterTires} />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mt-6">
           {typedListings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
@@ -127,7 +176,7 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
 
   return (
     <div className="text-center py-16 bg-background border border-border rounded-xl mt-6">
-      <Chrome className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+      <Car className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
       <h3 className="text-lg font-medium mb-2">No cars saved yet</h3>
       <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
         Install the CarScout Chrome extension to save car listings from

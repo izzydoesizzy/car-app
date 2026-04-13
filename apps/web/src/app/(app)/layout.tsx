@@ -34,7 +34,29 @@ export default async function AppLayout({
           <AppNav userEmail={user.email ?? ""} />
         </div>
       </header>
-      <main className="flex-1 bg-muted/30">{children}</main>
+      <main className="flex-1 bg-muted/30 pb-16 sm:pb-0">{children}</main>
+
+      {/* Mobile bottom nav */}
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border flex">
+        <Link
+          href="/dashboard"
+          className="flex-1 flex flex-col items-center justify-center py-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Dashboard
+        </Link>
+        <Link
+          href="/compare"
+          className="flex-1 flex flex-col items-center justify-center py-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Compare
+        </Link>
+        <Link
+          href="/guide"
+          className="flex-1 flex flex-col items-center justify-center py-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Guide
+        </Link>
+      </nav>
     </div>
   );
 }
