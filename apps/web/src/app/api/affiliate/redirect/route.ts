@@ -7,6 +7,8 @@ const AFFILIATE_URLS: Record<string, string> = {
   "caa-inspection": "https://www.caa.ca",
   "ppsa-ontario": "https://www.ontario.ca/page/search-personal-property-security-registration",
   "ppsa-bc": "https://www.bcregistry.gov.bc.ca/ppr",
+  ineedappi: "https://ineedappi.ca",
+  "kbb-canada": "https://www.kbb.ca/en-ca",
 };
 
 /**

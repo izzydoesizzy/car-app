@@ -82,6 +82,7 @@ export const PROVINCES: Record<string, ProvinceInfo> = {
     safetyInspectionRequired: true,
     safetyInspectionCost: 120,
     lienSearchRegistry: "Manitoba Personal Property Registry",
+    lienSearchCost: 12,
     notes:
       "RST 7% on purchase price. Safety inspection required for all private sales. MPI handles insurance and registration.",
   },
@@ -93,6 +94,7 @@ export const PROVINCES: Record<string, ProvinceInfo> = {
     hstRate: 0,
     safetyInspectionRequired: false,
     lienSearchRegistry: "Saskatchewan Personal Property Registry",
+    lienSearchCost: 12,
     notes: "PST 6%. SGI handles registration and insurance.",
   },
   NS: {

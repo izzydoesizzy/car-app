@@ -1,4 +1,4 @@
-import { ExternalLink, FileSearch, Wrench, Shield, Search } from "lucide-react";
+import { ExternalLink, FileSearch, Wrench, Shield, Search, DollarSign, ClipboardCheck } from "lucide-react";
 import type { Listing } from "@carscout/shared";
 
 interface AffiliateService {
@@ -53,6 +53,29 @@ const AFFILIATE_SERVICES: AffiliateService[] = [
     url: "https://www.ontario.ca/page/search-personal-property-security-registration",
     icon: <Search className="w-5 h-5" />,
     showWhen: (l) => !!l.vin,
+  },
+  {
+    id: "ineedappi",
+    name: "iNeedaPPi",
+    description:
+      "Mobile pre-purchase inspection at the vehicle's location. 50+ photos, condition score, and repair cost estimates.",
+    pricing: "$189.99",
+    url: "https://ineedappi.ca",
+    icon: <ClipboardCheck className="w-5 h-5" />,
+    showWhen: (l) =>
+      l.status === "viewing_scheduled" ||
+      l.status === "contacted" ||
+      l.status === "inspected",
+  },
+  {
+    id: "kbb-canada",
+    name: "Kelley Blue Book Canada",
+    description:
+      "Check fair market value, trade-in value, and pricing trends for your vehicle.",
+    pricing: "Free",
+    url: "https://www.kbb.ca/en-ca",
+    icon: <DollarSign className="w-5 h-5" />,
+    showWhen: () => true,
   },
 ];
 

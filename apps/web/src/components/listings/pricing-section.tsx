@@ -156,7 +156,67 @@ export function PricingSection({ listing }: { listing: Listing }) {
           />
         </div>
       </div>
+
+      <NegotiationInsights listing={listing} />
     </section>
+  );
+}
+
+function NegotiationInsights({ listing }: { listing: Listing }) {
+  const insights: string[] = [];
+
+  if (listing.cbbAverage && listing.listedPriceCad) {
+    const diff = listing.listedPriceCad - listing.cbbAverage;
+    const pct = Math.round((diff / listing.cbbAverage) * 100);
+    if (pct > 5) {
+      insights.push(
+        `Listed ${pct}% above CBB average (${formatPrice(diff)} over) — room to negotiate`
+      );
+    } else if (pct < -5) {
+      insights.push(
+        `Listed ${Math.abs(pct)}% below CBB average — a good deal if the vehicle checks out`
+      );
+    } else {
+      insights.push("Listed near CBB average — fair asking price");
+    }
+  }
+
+  if (
+    listing.accidentHistory &&
+    listing.accidentHistory !== "None" &&
+    listing.accidentHistory !== "Unknown"
+  ) {
+    insights.push("Accident history reported — use as leverage for price reduction");
+  }
+
+  if (listing.redFlags && listing.redFlags.trim().length > 0) {
+    insights.push("Red flags noted — address these before negotiating");
+  }
+
+  if (listing.mileageKm && listing.mileageKm > 150000) {
+    insights.push("High mileage (>150k km) — request maintenance records and factor in upcoming service costs");
+  }
+
+  if (listing.sellerType === "private") {
+    insights.push("Private seller — no dealer markup, but also no warranty or consumer protection");
+  } else if (listing.sellerType === "dealer") {
+    insights.push("Dealer listing — ask about warranty coverage and negotiate any admin/documentation fees");
+  }
+
+  if (insights.length === 0) return null;
+
+  return (
+    <div className="mt-4 pt-4 border-t border-border">
+      <h3 className="text-sm font-medium mb-2">Negotiation Insights</h3>
+      <ul className="space-y-1.5">
+        {insights.map((insight, i) => (
+          <li key={i} className="text-xs text-muted-foreground flex items-start gap-2">
+            <span className="text-primary mt-0.5">&#x2022;</span>
+            {insight}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

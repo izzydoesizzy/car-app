@@ -10,6 +10,7 @@ import {
   Fuel,
   Settings,
   Palette,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 import { formatPrice, formatMileage } from "@carscout/shared";
@@ -19,6 +20,12 @@ import { ListingActions } from "@/components/listings/listing-actions";
 import { ListingNotes } from "@/components/listings/listing-notes";
 import { PricingSection } from "@/components/listings/pricing-section";
 import { AffiliateCards } from "@/components/listings/affiliate-cards";
+import { VinDecodeSection } from "@/components/listings/vin-decode-section";
+import { TotalCostCalculator } from "@/components/listings/total-cost-calculator";
+import { RecallsSection } from "@/components/listings/recalls-section";
+import { PostPurchaseChecklist } from "@/components/listings/post-purchase-checklist";
+import { PriceHistoryChart } from "@/components/listings/price-history-chart";
+import { ListingTags } from "@/components/listings/listing-tags";
 
 export async function generateMetadata({
   params,
@@ -107,12 +114,25 @@ export default async function ListingDetailPage({
             )}
           </div>
         </div>
-        <ListingActions listing={listing} />
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/listings/${listing.id}/edit`}
+            className="inline-flex items-center gap-1.5 px-3 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+          >
+            <Pencil className="w-3.5 h-3.5" /> Edit
+          </Link>
+          <ListingActions listing={listing} />
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Main content - 2 columns */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Post-purchase checklist — shown when status is purchased */}
+          {listing.status === "purchased" && (
+            <PostPurchaseChecklist listing={listing} />
+          )}
+
           {/* Image gallery */}
           {listing.images && (listing.images as string[]).length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 rounded-xl overflow-hidden">
@@ -178,8 +198,16 @@ export default async function ListingDetailPage({
             </div>
           </section>
 
+          {/* VIN Decode — shown when VIN is available */}
+          {listing.vin && listing.vin.length === 17 && (
+            <VinDecodeSection listing={listing} />
+          )}
+
           {/* Pricing & Negotiation */}
           <PricingSection listing={listing} />
+
+          {/* Price History */}
+          <PriceHistoryChart listingId={listing.id} />
 
           {/* Condition & History */}
           <section className="bg-background border border-border rounded-xl p-5">
@@ -213,6 +241,13 @@ export default async function ListingDetailPage({
               )}
             </div>
           </section>
+
+          {/* Safety Recalls */}
+          <RecallsSection
+            make={listing.make}
+            model={listing.model}
+            year={listing.year}
+          />
 
           {/* Seller & Communication */}
           <section className="bg-background border border-border rounded-xl p-5">
@@ -277,6 +312,15 @@ export default async function ListingDetailPage({
               </span>
             </div>
           </section>
+
+          {/* Tags */}
+          <ListingTags listingId={listing.id} />
+
+          {/* Total Cost Calculator */}
+          <TotalCostCalculator
+            price={listing.listedPriceCad}
+            province={listing.province}
+          />
 
           {/* Affiliate Cards */}
           <AffiliateCards listing={listing} />
