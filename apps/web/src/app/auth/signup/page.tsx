@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -18,7 +17,7 @@ export default function SignUpPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -29,9 +28,34 @@ export default function SignUpPage() {
     if (error) {
       setError(error.message);
       setLoading(false);
+    } else if (data.session) {
+      window.location.href = "/dashboard";
     } else {
-      router.push("/dashboard");
+      setConfirmationSent(true);
     }
+  }
+
+  if (confirmationSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <Link href="/" className="text-2xl font-bold text-primary">
+            CarScout
+          </Link>
+          <h1 className="text-xl font-semibold mt-4">Check your email</h1>
+          <p className="text-sm text-muted-foreground mt-4">
+            We sent a confirmation link to <strong>{email}</strong>. Click the
+            link to activate your account, then sign in.
+          </p>
+          <Link
+            href="/auth/signin"
+            className="inline-block mt-6 text-primary hover:underline text-sm"
+          >
+            Go to Sign In
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (

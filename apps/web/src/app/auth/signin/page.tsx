@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -14,7 +14,6 @@ export default function SignInPage() {
 }
 
 function SignInForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
@@ -37,7 +36,7 @@ function SignInForm() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push(redirect);
+      window.location.href = redirect;
     }
   }
 
